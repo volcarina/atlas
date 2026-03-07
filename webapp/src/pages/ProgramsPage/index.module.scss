@@ -1,0 +1,28 @@
+@import '../../styles/_vars.scss';
+@import '../../styles/_mixins.scss';
+
+.title {
+  @include h1;
+}
+
+.programs {
+  .program {
+    padding: 20px;
+    border: 1px solid $black;
+    border-radius: 10px;
+    & + .program {
+      margin-top: 20px;
+    }
+
+    .programTitle {
+      @include h2;
+
+      .programLink {
+        @include link;
+      }
+    }
+    .description {
+      font-size: 18px;
+    }
+  }
+}

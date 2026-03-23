@@ -7,7 +7,7 @@
   padding: 40px 20px;
 
   .title {
-    @include h1
+    @include h1;
   }
 
   .programInfo {
@@ -21,7 +21,7 @@
       font-size: 18px;
       line-height: 1.6;
       margin-bottom: 30px;
-      color:black;
+      color: black;
     }
 
     .programDetails {
@@ -61,13 +61,13 @@
 
       p {
         font-size: 14px;
-        color:darkgray;
+        color: darkgray;
         margin-bottom: 5px;
       }
 
       span {
         @include h2;
-        color:paleturquoise;
+        color: paleturquoise;
       }
     }
   }

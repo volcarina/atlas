@@ -1,28 +1,50 @@
 import { trpc } from '../../lib/trpc'
+import { useEffect, useState } from 'react'
 import css from './index.module.scss'
 
+interface User {
+  id: string
+  email: string
+  name: string
+}
+
 export const ProfilePage = () => {
+  const [user, setUser] = useState<User | null>(null)
   const { data, error, isLoading, isFetching, isError } = trpc.getUserProfile.useQuery()
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser) as User
+      setUser(parsedUser)
+      return
+    }
+
+    // Fallback на tRPC данные
+    if (data?.user) {
+      setUser(data.user)
+    }
+  }, [data])
 
   if (isLoading || isFetching) {
     return <span>Загрузка...</span>
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>
+    return <span>Error: {error?.message}</span>
   }
 
-  if (!data || !data.user) {
+  if (!user) {
     return <span>Профиль не найден</span>
   }
 
   return (
     <div className={css.profilePage}>
       <div className={css.profileHeader}>
-        <div className={css.avatar}>АВ</div>
+        <div className={css.avatar}>{user.name.slice(0, 2).toUpperCase()}</div>
         <div className={css.profileInfo}>
-          <h1 className={css.title}>{data.user.name}</h1>
-          <p className={css.email}>{data.user.email}</p>
+          <h1 className={css.title}>{user.name}</h1>
+          <p className={css.email}>{user.email}</p>
         </div>
       </div>
 

@@ -1,9 +1,6 @@
 @import '../../styles/_vars.scss';
 @import '../../styles/_mixins.scss';
 
-.title {
-  @include h1;
-}
 
 .programs {
   .program {
@@ -14,15 +11,8 @@
       margin-top: 20px;
     }
 
-    .programTitle {
-      @include h2;
-
-      .programLink {
-        @include link;
-      }
-    }
-    .description {
-      font-size: 18px;
+    .programLink {
+      @include link;
     }
   }
 }

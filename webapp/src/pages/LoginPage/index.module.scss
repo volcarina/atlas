@@ -1,0 +1,97 @@
+@import '../../styles/_vars.scss';
+@import '../../styles/_mixins.scss';
+
+.title {
+  @include h1;
+}
+
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  .container {
+    background: $white;
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba($black, 0.1);
+    max-width: 400px;
+    width: 100%;
+    margin: 20px;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input {
+    padding: 16px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .submit {
+    padding: 18px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: $white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+
+  .error {
+    color: #ef4444;
+    text-align: center;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .signupLink {
+    text-align: center;
+    margin-top: 24px;
+    color: gray;
+
+    a {
+      @include link;
+      font-weight: 600;
+      color: #667eea;
+    }
+  }
+}

@@ -1,4 +1,6 @@
+import { z } from 'zod'
 import { trpc } from '../lib/trpc'
+import { trainers } from '../lib/trainers'
 // @index('./**/index.ts', f => `import { ${f.path.split('/').slice(0, -1).pop()}TrpcRoute } from '${f.path.split('/').slice(0, -1).join('/')}'`)
 import { getProgramTrpcRoute } from './getProgram'
 import { getProgramsTrpcRoute } from './getPrograms'
@@ -13,6 +15,29 @@ export const trpcRouter = trpc.router({
   getUserProfile: getUserProfileTrpcRoute,
   login: loginTrpcRoute,
   // @endindex
+
+  getTrainers: trpc.procedure.query(() => {
+    return {
+      trainers: trainers.map((t) => ({
+        id: t.id,
+        name: t.name,
+        username: t.username,
+        specialty: t.specialty,
+        experience: t.experience,
+        rating: t.rating,
+        bio: t.bio,
+        clientsCount: t.clientsCount,
+        certificationsCount: t.certificationsCount,
+      })),
+    }
+  }),
+
+  getTrainer: trpc.procedure
+    .input(z.object({ trainerId: z.string() }))
+    .query(({ input }) => {
+      const trainer = trainers.find((t) => t.id === input.trainerId)
+      return { trainer: trainer || null }
+    }),
 })
 
 export type TrpcRouter = typeof trpcRouter

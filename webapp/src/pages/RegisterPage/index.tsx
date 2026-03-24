@@ -1,30 +1,32 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { trpc } from '../../lib/trpc'
-import { getProfileRoute, getLoginRoute } from '../../lib/routes'
-import css from './index.module.scss'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { trpc } from '../../lib/trpc';
+import { getProfileRoute, getLoginRoute } from '../../lib/routes';
+import css from './index.module.scss';
 
 export const RegisterPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const navigate = useNavigate();
 
   const registerMutation = trpc.register.useMutation({
-    onSuccess: (data) => {
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      navigate(getProfileRoute())
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: (data: { token: string; user: any }) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate(getProfileRoute());
     },
-    onError: (error) => {
-      alert(error.message)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: { message: any }) => {
+      alert(error.message);
     },
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    registerMutation.mutate({ email, password, name })
-  }
+    e.preventDefault();
+    registerMutation.mutate({ email, password, name });
+  };
 
   return (
     <div className={css.registerPage}>
@@ -77,5 +79,5 @@ export const RegisterPage = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

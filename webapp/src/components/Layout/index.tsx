@@ -1,6 +1,6 @@
-import { Link, Outlet } from 'react-router-dom'
-import { getAllProgramsRoute, getProfileRoute, getHomeRoute } from '../../lib/routes'
-import css from './index.module.scss'
+import { Link, Outlet } from 'react-router-dom';
+import { getAllProgramsRoute, getProfileRoute, getHomeRoute } from '../../lib/routes';
+import css from './index.module.scss';
 
 export const Layout = () => {
   return (
@@ -29,5 +29,5 @@ export const Layout = () => {
         <Outlet />
       </div>
     </div>
-  )
-}
+  );
+};

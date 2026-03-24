@@ -7,7 +7,8 @@
     "types": "tsc --noEmit --project ./tsconfig.json",
     "build": "rimraf ./dist && tsc --build ./tsconfig.json",
     "start": "node ./dist/index.js",
-    "prettify": "prettier --log-level warn --ignore-path './.prettierignore --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}'"
+    "prettify": "prettier --log-level warn --ignore-path './.prettierignore --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}'",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/.eslintcache --ext .ts ."
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

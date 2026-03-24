@@ -1,11 +1,9 @@
 import { trpc } from '../../lib/trpc';
-import { userProfile, getMarks } from '../../lib/programs';
-import { programs } from '../../lib/programs';
+import { getMarks, programs } from '../../lib/programs';
 
-export const getUserProfileTrpcRoute = trpc.procedure.query(() => {
+export const getMarksTrpcRoute = trpc.procedure.query(() => {
   const marks = getMarks();
-
-  const enrichedMarks = marks.map((m) => {
+  const enriched = marks.map((m) => {
     const program = programs.find((p) => p.name === m.programName);
     return {
       ...m,
@@ -14,9 +12,5 @@ export const getUserProfileTrpcRoute = trpc.procedure.query(() => {
       programDuration: program?.duration ?? 0,
     };
   });
-
-  return {
-    user: userProfile,
-    marks: enrichedMarks,
-  };
+  return { marks: enriched };
 });

@@ -1,11 +1,11 @@
-import { initTRPC, TRPCError } from '@trpc/server'
-import * as trpcExpress from '@trpc/server/adapters/express'
-import { type Express } from 'express'
-import { type TrpcRouter } from '../router'
+import { initTRPC, TRPCError } from '@trpc/server';
+import * as trpcExpress from '@trpc/server/adapters/express';
+import { type Express } from 'express';
+import { type TrpcRouter } from '../router';
 
-export const trpc = initTRPC.create()
+export const trpc = initTRPC.create();
 
-export { TRPCError }
+export { TRPCError };
 
 export const applyTrpcToExpressApp = (expressApp: Express, trpcRouter: TrpcRouter) => {
   expressApp.use(
@@ -13,5 +13,5 @@ export const applyTrpcToExpressApp = (expressApp: Express, trpcRouter: TrpcRoute
     trpcExpress.createExpressMiddleware({
       router: trpcRouter,
     })
-  )
-}
+  );
+};

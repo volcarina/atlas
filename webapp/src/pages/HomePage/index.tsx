@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import { getAllProgramsRoute } from '../../lib/routes'
-import css from './index.module.scss'
+import { Link } from 'react-router-dom';
+import { getAllProgramsRoute } from '../../lib/routes';
+import css from './index.module.scss';
 
 export const HomePage = () => {
   return (
@@ -157,5 +157,5 @@ export const HomePage = () => {
         </div>
       </section>
     </>
-  )
-}
+  );
+};

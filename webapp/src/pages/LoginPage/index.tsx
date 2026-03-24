@@ -1,29 +1,29 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { trpc } from '../../lib/trpc'
-import { getProfileRoute, getRegisterRoute } from '../../lib/routes'
-import css from './index.module.scss'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { trpc } from '../../lib/trpc';
+import { getProfileRoute, getRegisterRoute } from '../../lib/routes';
+import css from './index.module.scss';
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const loginMutation = trpc.login.useMutation({
     onSuccess: (data) => {
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      navigate(getProfileRoute())
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate(getProfileRoute());
     },
     onError: (error) => {
-      alert(error.message)
+      alert(error.message);
     },
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    loginMutation.mutate({ email, password })
-  }
+    e.preventDefault();
+    loginMutation.mutate({ email, password });
+  };
 
   return (
     <div className={css.loginPage}>
@@ -65,5 +65,5 @@ export const LoginPage = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

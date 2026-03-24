@@ -1,11 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { TrpcProvider } from './lib/trpc.tsx'
-import { HomePage } from './pages/HomePage'
-import { ProgramsPage } from './pages/ProgramsPage'
-import { ViewProgramPage } from './pages/ViewProgramPage'
-import { ProfilePage } from './pages/ProfilePage'
-import { LoginPage } from './pages/LoginPage'
-import { RegisterPage } from './pages/RegisterPage'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { TrpcProvider } from './lib/trpc.tsx';
+import { HomePage } from './pages/HomePage';
+import { ProgramsPage } from './pages/ProgramsPage';
+import { ViewProgramPage } from './pages/ViewProgramPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
 import {
   getAllProgramsRoute,
   getViewProgramRoute,
@@ -14,9 +14,9 @@ import {
   getLoginRoute,
   getRegisterRoute,
   getHomeRoute,
-} from './lib/routes.ts'
-import { Layout } from './components/Layout/index.tsx'
-import './styles/global.scss'
+} from './lib/routes.ts';
+import { Layout } from './components/Layout/index.tsx';
+import './styles/global.scss';
 
 export const App = () => {
   return (
@@ -34,5 +34,5 @@ export const App = () => {
         </Routes>
       </BrowserRouter>
     </TrpcProvider>
-  )
-}
+  );
+};

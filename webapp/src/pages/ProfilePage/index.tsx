@@ -13,34 +13,39 @@ const TAB_LABELS: Record<TabType, string> = {
 };
 
 const SPORT_EMOJI: Record<string, string> = {
-  Йога: '🧘',
-  Кардио: '🏃',
-  Силовые: '🏋️',
-  HIIT: '⚡',
-  Стретчинг: '🤸',
-  Пилатес: '🌀',
-  Функциональный: '💪',
-  Бокс: '🥊',
+  Йога: '🧘', Кардио: '🏃', Силовые: '🏋️', HIIT: '⚡',
+  Стретчинг: '🤸', Пилатес: '🌀', Функциональный: '💪', Бокс: '🥊',
 };
+
+const ComingSoon = ({ title, description }: { title: string; description: string }) => (
+  <div className={css.comingSoon}>
+    <div className={css.comingSoonIcon}>🚧</div>
+    <h3 className={css.comingSoonTitle}>{title}</h3>
+    <p className={css.comingSoonDesc}>{description}</p>
+  </div>
+);
 
 export const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('favorite');
   const { data, isLoading, isError, refetch } = trpc.getUserProfile.useQuery();
-  const removeMarkMutation = trpc.removeMark.useMutation({ onSuccess: () => refetch() });
+  const removeMarkMutation = trpc.removeMark.useMutation({
+    onSuccess: () => refetch(),
+  });
 
   if (isLoading) return <div className={css.state}>Загрузка...</div>;
   if (isError || !data?.user) return <div className={css.state}>Ошибка загрузки профиля</div>;
 
   const { user, marks = [] } = data;
-  const initials = user.name
-    .split(' ')
-    .map((w: string) => w[0])
-    .join('');
-
+  const initials = user.name.split(' ').map((w: string) => w[0]).join('');
   const tabMarks = marks.filter((m: any) => m.mark === activeTab);
+
+  const completedCount = marks.filter((m: any) => m.mark === 'completed').length;
+  const favoriteCount  = marks.filter((m: any) => m.mark === 'favorite').length;
+  const wantToCount    = marks.filter((m: any) => m.mark === 'wantTo').length;
 
   return (
     <div className={css.page}>
+
       <div className={css.cover} />
 
       <div className={css.headerRow}>
@@ -54,15 +59,11 @@ export const ProfilePage = () => {
         <div className={css.headerControls}>
           <div className={css.controlRow}>
             <span className={css.controlLabel}>Темная тема</span>
-            <div className={css.toggle}>
-              <div className={css.toggleKnob} />
-            </div>
+            <div className={css.toggle}><div className={css.toggleKnob} /></div>
           </div>
           <div className={css.controlRow}>
             <span className={css.controlLabel}>Фон профиля</span>
-            <button className={css.selectBtn} disabled>
-              Sel ▾
-            </button>
+            <button className={css.selectBtn} disabled>Sel ▾</button>
           </div>
         </div>
       </div>
@@ -101,7 +102,44 @@ export const ProfilePage = () => {
         </div>
       </div>
 
-      <div className={css.marksSection}>
+      <section className={css.section}>
+        <div className={css.sectionHeader}>
+          <h2 className={css.sectionTitle}>Статистика</h2>
+        </div>
+        <div className={css.statsGrid}>
+          <div className={css.statCard}>
+            <span className={css.statValue}>{completedCount}</span>
+            <span className={css.statLabel}>Пройдено</span>
+          </div>
+          <div className={css.statCard}>
+            <span className={css.statValue}>{favoriteCount}</span>
+            <span className={css.statLabel}>Избранных</span>
+          </div>
+          <div className={css.statCard}>
+            <span className={css.statValue}>{wantToCount}</span>
+            <span className={css.statLabel}>Хочу пройти</span>
+          </div>
+          <div className={`${css.statCard} ${css.statCardDisabled}`}>
+            <span className={css.statValue}>—</span>
+            <span className={css.statLabel}>Минут всего</span>
+          </div>
+          <div className={`${css.statCard} ${css.statCardDisabled}`}>
+            <span className={css.statValue}>—</span>
+            <span className={css.statLabel}>Калорий сожжено</span>
+          </div>
+          <div className={`${css.statCard} ${css.statCardDisabled}`}>
+            <span className={css.statValue}>—</span>
+            <span className={css.statLabel}>Серия дней</span>
+          </div>
+        </div>
+        <ComingSoon
+          title="Детальная статистика"
+          description="Графики прогресса, история тренировок по дням и анализ активности появятся в следующем спринте."
+        />
+      </section>
+
+      <section className={css.section}>
+        <h2 className={css.sectionTitle}>Мои тренировки</h2>
         <div className={css.tabs}>
           {(Object.keys(TAB_LABELS) as TabType[]).map((tab) => {
             const count = marks.filter((m: any) => m.mark === tab).length;
@@ -120,9 +158,9 @@ export const ProfilePage = () => {
 
         {tabMarks.length === 0 ? (
           <div className={css.empty}>
-            {activeTab === 'favorite' && 'Добавляйте тренировки в избранное, нажав ♡ на странице программы'}
+            {activeTab === 'favorite'  && 'Добавляйте тренировки в избранное, нажав ♡ на странице программы'}
             {activeTab === 'completed' && 'Здесь появятся пройденные тренировки'}
-            {activeTab === 'wantTo' && 'Отмечайте тренировки, которые хотите пройти'}
+            {activeTab === 'wantTo'    && 'Отмечайте тренировки, которые хотите пройти'}
           </div>
         ) : (
           <div className={css.programsScroll}>
@@ -133,26 +171,46 @@ export const ProfilePage = () => {
                     <span className={css.cardEmoji}>{SPORT_EMOJI[m.programSport] ?? '🏅'}</span>
                   </div>
                   {activeTab === 'completed' && <span className={css.doneBadge}>✓</span>}
+                  {activeTab === 'favorite'  && <span className={css.favBadge}>♥</span>}
+                  {activeTab === 'wantTo'    && <span className={css.wantBadge}>+</span>}
                 </Link>
                 <div className={css.cardBody}>
-                  <p className={css.cardTitle}>Тренировка</p>
-                  <p className={css.cardMeta}>
-                    {m.programSport} · {m.programLevel}
-                  </p>
+                  <p className={css.cardTitle}>{m.programName}</p>
+                  <p className={css.cardMeta}>{m.programSport} · {m.programLevel}</p>
                   <p className={css.cardDuration}>{m.programDuration} минут</p>
                 </div>
                 <button
                   className={css.removeBtn}
                   title="Убрать отметку"
                   onClick={() => removeMarkMutation.mutate({ programName: m.programName })}
-                >
-                  ×
-                </button>
+                >×</button>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </section>
+
+      <section className={css.section}>
+        <div className={css.sectionHeader}>
+          <h2 className={css.sectionTitle}>Рекомендации для вас</h2>
+        </div>
+        <ComingSoon
+          title="Персональные рекомендации"
+          description="На основе пройденных тренировок и избранного система подберёт похожие программы специально для вас."
+        />
+        <div className={css.placeholderRow}>
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className={css.placeholderCard}>
+              <div className={css.placeholderThumb} />
+              <div className={css.placeholderBody}>
+                <div className={css.placeholderLine} />
+                <div className={`${css.placeholderLine} ${css.placeholderLineShort}`} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 };

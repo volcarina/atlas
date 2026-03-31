@@ -6,6 +6,7 @@ import { ViewProgramPage } from './pages/ViewProgramPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { HistoryPage } from './pages/HistoryPage';
 import {
   getAllProgramsRoute,
   getViewProgramRoute,
@@ -14,6 +15,7 @@ import {
   getLoginRoute,
   getRegisterRoute,
   getHomeRoute,
+  getHistoryRoute,
 } from './lib/routes.ts';
 import { Layout } from './components/Layout/index.tsx';
 import './styles/global.scss';
@@ -30,6 +32,7 @@ export const App = () => {
             <Route path={getAllProgramsRoute()} element={<ProgramsPage />} />
             <Route path={getViewProgramRoute(viewProgramRouteParams)} element={<ViewProgramPage />} />
             <Route path={getProfileRoute()} element={<ProfilePage />} />
+            <Route path={getHistoryRoute()} element={<HistoryPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

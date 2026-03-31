@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { trpc } from '../../lib/trpc';
 import { type ViewProgramRouteParams } from '../../lib/routes';
+import { trackProgramView } from '../HistoryPage';
 import css from './index.module.scss';
 
 const StarRating = ({ rating }: { rating: number }) => (
   <div className={css.stars}>
     {[1, 2, 3, 4, 5].map((s) => (
-      <span key={s} className={s <= Math.round(rating) ? css.starFilled : css.starEmpty}>★</span>
+      <span key={s} className={s <= Math.round(rating) ? css.starFilled : css.starEmpty}>
+        ★
+      </span>
     ))}
     <span className={css.ratingNum}>{rating.toFixed(1)}</span>
   </div>
@@ -16,7 +19,10 @@ const StarRating = ({ rating }: { rating: number }) => (
 
 const TrainerCard = ({ trainer }: { trainer: any }) => {
   const [hovered, setHovered] = useState(false);
-  const initials = trainer.name.split(' ').map((n: string) => n[0]).join('');
+  const initials = trainer.name
+    .split(' ')
+    .map((n: string) => n[0])
+    .join('');
 
   return (
     <div className={css.trainerCard} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
@@ -50,9 +56,9 @@ const TrainerCard = ({ trainer }: { trainer: any }) => {
 type MarkType = 'completed' | 'favorite' | 'wantTo';
 
 const MARK_CONFIG: { key: MarkType; icon: string; label: string; activeColor: string }[] = [
-  { key: 'completed', icon: '✓', label: 'Выполнено',   activeColor: '#1a936f' },
-  { key: 'favorite',  icon: '♡', label: 'Избранное',   activeColor: '#e94560' },
-  { key: 'wantTo',    icon: '+', label: 'Хочу пройти', activeColor: '#2b7a78' },
+  { key: 'completed', icon: '✓', label: 'Выполнено', activeColor: '#1a936f' },
+  { key: 'favorite', icon: '♡', label: 'Избранное', activeColor: '#e94560' },
+  { key: 'wantTo', icon: '+', label: 'Хочу пройти', activeColor: '#2b7a78' },
 ];
 
 const MarkButtons = ({ programName }: { programName: string }) => {
@@ -109,7 +115,18 @@ export const ViewProgramPage = () => {
   const { programTitle } = useParams() as ViewProgramRouteParams;
   const { data, error, isLoading, isFetching, isError } = trpc.getProgram.useQuery({ programTitle });
 
-  if (isLoading || isFetching) return <div className={css.loading}><span>Загрузка...</span></div>;
+  useEffect(() => {
+    if (data?.program?.name) {
+      trackProgramView(data.program.name);
+    }
+  }, [data?.program?.name]);
+
+  if (isLoading || isFetching)
+    return (
+      <div className={css.loading}>
+        <span>Загрузка...</span>
+      </div>
+    );
   if (isError) return <div className={css.error}>Ошибка: {error.message}</div>;
   if (!data?.program) return <div className={css.error}>Программа не найдена</div>;
 
@@ -118,7 +135,6 @@ export const ViewProgramPage = () => {
   return (
     <div className={css.page}>
       <div className={css.hero}>
-
         <div className={css.heroMedia}>
           <div className={css.mediaPicture}>
             <div className={css.mediaPlaceholder} />
@@ -138,7 +154,9 @@ export const ViewProgramPage = () => {
         </div>
 
         <div className={css.heroInfo}>
-          <p className={css.heroSportTag}>{program.sport} · {program.level}</p>
+          <p className={css.heroSportTag}>
+            {program.sport} · {program.level}
+          </p>
           <h1 className={css.heroTitle}>{program.name}</h1>
           <p className={css.heroDesc}>{program.description}</p>
 
@@ -151,9 +169,18 @@ export const ViewProgramPage = () => {
           <span className={css.reviewsCount}>({program.reviewsCount} отзывов)</span>
 
           <div className={css.statPills}>
-            <div className={css.statPill}><span className={css.pillLabel}>Релиз</span><span className={css.pillValue}>2026</span></div>
-            <div className={css.statPill}><span className={css.pillLabel}>Калории</span><span className={css.pillValue}>{program.calories}</span></div>
-            <div className={css.statPill}><span className={css.pillLabel}>Прошли</span><span className={css.pillValue}>{program.completedCount.toLocaleString('ru')}</span></div>
+            <div className={css.statPill}>
+              <span className={css.pillLabel}>Релиз</span>
+              <span className={css.pillValue}>2026</span>
+            </div>
+            <div className={css.statPill}>
+              <span className={css.pillLabel}>Калории</span>
+              <span className={css.pillValue}>{program.calories}</span>
+            </div>
+            <div className={css.statPill}>
+              <span className={css.pillLabel}>Прошли</span>
+              <span className={css.pillValue}>{program.completedCount.toLocaleString('ru')}</span>
+            </div>
           </div>
 
           <button className={css.startBtn}>Начать тренировку</button>

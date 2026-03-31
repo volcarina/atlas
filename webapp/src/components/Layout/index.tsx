@@ -1,5 +1,5 @@
 import { Link, Outlet } from 'react-router-dom';
-import { getAllProgramsRoute, getProfileRoute, getHomeRoute } from '../../lib/routes';
+import { getAllProgramsRoute, getProfileRoute, getHomeRoute, getHistoryRoute } from '../../lib/routes';
 import css from './index.module.scss';
 
 export const Layout = () => {
@@ -21,6 +21,11 @@ export const Layout = () => {
           <li className={css.item}>
             <Link className={css.link} to={getProfileRoute()}>
               Личный кабинет
+            </Link>
+          </li>
+          <li className={css.item}>
+            <Link className={css.link} to={getHistoryRoute()}>
+              История тренировок
             </Link>
           </li>
         </ul>

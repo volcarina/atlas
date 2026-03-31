@@ -501,7 +501,6 @@ $radius-sm: 8px;
   }
 }
 
-
 .markButtons {
   display: flex;
   gap: 8px;
@@ -533,8 +532,12 @@ $radius-sm: 8px;
 .markBtnActive {
   color: white !important;
 
-  .markBtnIcon { color: white; }
-  .markBtnLabel { color: rgba(255,255,255,0.85); }
+  .markBtnIcon {
+    color: white;
+  }
+  .markBtnLabel {
+    color: rgba(255, 255, 255, 0.85);
+  }
 }
 
 .markBtnIcon {
@@ -543,7 +546,9 @@ $radius-sm: 8px;
   color: #888;
   transition: color 0.18s;
 
-  .markBtnActive & { color: white; }
+  .markBtnActive & {
+    color: white;
+  }
 }
 
 .markBtnLabel {
@@ -554,5 +559,7 @@ $radius-sm: 8px;
   white-space: nowrap;
   transition: color 0.18s;
 
-  .markBtnActive & { color: rgba(255,255,255,0.85); }
+  .markBtnActive & {
+    color: rgba(255, 255, 255, 0.85);
+  }
 }

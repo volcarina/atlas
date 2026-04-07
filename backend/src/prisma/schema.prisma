@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  marks Mark[]
+
+  @@map("users")
+}
+
+model Program {
+  id             String @id @default(uuid())
+  nick           String @unique
+  name           String
+  sport          String
+  level          String
+  duration       Int
+  calories       Int
+  description    String
+  text           String
+  rating         Float  @default(0)
+  reviewsCount   Int    @default(0)
+  completedCount Int    @default(0)
+
+  exercises Exercise[]
+  marks     Mark[]
+
+  @@map("programs")
+}
+
+model Exercise {
+  id        Int    @id @default(autoincrement())
+  name      String
+  programId String
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, id])
+  @@map("exercises")
+}
+
+model Trainer {
+  id                  String   @id @default(uuid())
+  name                String
+  username            String   @unique
+  specialty           String
+  bio                 String
+  experience          Int
+  rating              Float
+  clientsCount        Int
+  certificationsCount Int
+  sports              String[]
+
+  @@map("trainers")
+}
+
+model Mark {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  programId String
+  mark      MarkType
+  markedAt  DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, programId])
+  @@map("marks")
+}
+
+enum MarkType {
+  completed
+  favorite
+  wantTo
+}

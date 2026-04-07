@@ -1,21 +1,23 @@
 import { z } from 'zod';
 import { trpc, TRPCError } from '../../lib/trpc';
-import { users } from '../../lib/programs';
 
 export const registerTrpcRoute = trpc.procedure
   .input(z.object({ email: z.string().email(), password: z.string().min(6), name: z.string() }))
-  .mutation(({ input }) => {
-    const exists = users.some((u) => u.email === input.email);
-    if (exists) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Пользователь уже существует' });
+  .mutation(async ({ input, ctx }) => {
+    const exists = await ctx.prisma.user.findFirst({ where: { email: input.email } });
 
-    const newUser = {
-      id: (users.length + 1).toString(),
-      email: input.email,
-      password: input.password,
-      name: input.name,
-    };
-    users.push(newUser);
+    if (exists) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'Пользователь уже существует' });
+    }
 
-    const token = `fake-jwt-token-${newUser.id}-${Date.now()}`;
-    return { user: { id: newUser.id, email: newUser.email, name: newUser.name }, token };
+    const user = await ctx.prisma.user.create({
+      data: {
+        name: input.name,
+        email: input.email,
+        password: input.password,
+      },
+    });
+
+    const token = `fake-jwt-token-${user.id}-${Date.now()}`;
+    return { user: { id: user.id, email: user.email, name: user.name }, token };
   });

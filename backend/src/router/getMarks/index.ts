@@ -1,16 +1,35 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { trpc } from '../../lib/trpc';
-import { getMarks, programs } from '../../lib/programs';
 
-export const getMarksTrpcRoute = trpc.procedure.query(() => {
-  const marks = getMarks();
-  const enriched = marks.map((m) => {
-    const program = programs.find((p) => p.name === m.programName);
-    return {
-      ...m,
-      programSport: program?.sport ?? '',
-      programLevel: program?.level ?? '',
-      programDuration: program?.duration ?? 0,
-    };
+export const getMarksTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
+  // Используем первого пользователя (до появления auth)
+  const user = await ctx.prisma.user.findFirst();
+  if (!user) return { marks: [] };
+
+  const marks = await ctx.prisma.mark.findMany({
+    where: { userId: user.id },
+    include: {
+      program: {
+        select: { name: true, sport: true, level: true, duration: true },
+      },
+    },
+    orderBy: { markedAt: 'desc' },
   });
-  return { marks: enriched };
+
+  return {
+    marks: marks.map(
+      (m: {
+        program: { name: any; sport: any; level: any; duration: any };
+        mark: any;
+        markedAt: { toISOString: () => any };
+      }) => ({
+        programName: m.program.name,
+        mark: m.mark,
+        markedAt: m.markedAt.toISOString(),
+        programSport: m.program.sport,
+        programLevel: m.program.level,
+        programDuration: m.program.duration,
+      })
+    ),
+  };
 });

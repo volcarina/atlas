@@ -1,7 +1,7 @@
-import _ from 'lodash';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from 'zod';
-import { programs, SPORTS, LEVELS } from '../../lib/programs';
 import { trpc } from '../../lib/trpc';
+import { SPORTS, LEVELS } from '../../lib/programs';
 
 export const getProgramsTrpcRoute = trpc.procedure
   .input(
@@ -13,33 +13,58 @@ export const getProgramsTrpcRoute = trpc.procedure
       })
       .optional()
   )
-  .query(({ input }) => {
-    let filtered = programs;
+  .query(async ({ input, ctx }) => {
+    const where: {
+      sport?: string;
+      level?: string;
+      duration?: { lte: number };
+    } = {};
 
     if (input?.sport && input.sport !== 'Все') {
-      filtered = filtered.filter((p) => p.sport === input.sport);
+      where.sport = input.sport;
     }
     if (input?.level && input.level !== 'Все') {
-      filtered = filtered.filter((p) => p.level === input.level);
+      where.level = input.level;
     }
     if (input?.maxDuration) {
-      filtered = filtered.filter((p) => p.duration <= input.maxDuration!);
+      where.duration = { lte: input.maxDuration };
     }
 
+    const programs = await ctx.prisma.program.findMany({
+      where,
+      include: {
+        exercises: {
+          select: { id: true, name: true },
+        },
+      },
+      orderBy: { completedCount: 'desc' },
+    });
+
     return {
-      programs: filtered.map((p) =>
-        _.pick(p, [
-          'name',
-          'sport',
-          'level',
-          'duration',
-          'calories',
-          'description',
-          'rating',
-          'reviewsCount',
-          'completedCount',
-          'exercises',
-        ])
+      programs: programs.map(
+        (p: {
+          name: any;
+          sport: any;
+          level: any;
+          duration: any;
+          calories: any;
+          description: any;
+          rating: any;
+          reviewsCount: any;
+          completedCount: any;
+          exercises: any;
+        }) => ({
+          name: p.name,
+          sport: p.sport,
+          level: p.level,
+          duration: p.duration,
+          calories: p.calories,
+          description: p.description,
+          rating: p.rating,
+          reviewsCount: p.reviewsCount,
+          completedCount: p.completedCount,
+          exercises: p.exercises,
+        })
       ),
       sports: SPORTS,
       levels: LEVELS,

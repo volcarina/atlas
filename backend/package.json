@@ -2,25 +2,37 @@
   "name": "@atlas/backend",
   "private": true,
   "version": "0.0.0",
+  "prisma": {
+    "schema": "src/prisma/schema.prisma",
+    "seed": "ts-node src/prisma/seed.ts"
+  },
   "scripts": {
-    "dev": "ts-node-dev --rs src/index.ts",
+    "dev": "ts-node-dev --watch ./.env --rs ./src/index.ts",
     "types": "tsc --noEmit --project ./tsconfig.json",
     "build": "rimraf ./dist && tsc --build ./tsconfig.json",
     "start": "node ./dist/index.js",
-    "prettify": "prettier --log-level warn --ignore-path './.prettierignore --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}'",
+    "pmd": "prisma migrate dev --schema ./src/prisma/schema.prisma",
+    "pgc": "prisma generate",
+    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
+    "prepare": "pnpm pgc",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/.eslintcache --ext .ts ."
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/lodash": "^4.17.24",
-    "@types/node": "^25.3.0"
+    "@types/node": "^25.3.0",
+    "@types/pg": "^8.20.0",
+    "prisma": "^7.6.0"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
     "@trpc/server": "^11.11.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "lodash": "^4.17.23",
+    "pg": "^8.20.0",
     "zod": "^4.3.6"
   }
 }

@@ -1,44 +1,75 @@
-import _ from 'lodash';
 import { trpc } from '../../lib/trpc';
-import { userProfile, getMarks, programs } from '../../lib/programs';
 
-export const getUserProfileTrpcRoute = trpc.procedure.query(() => {
-  const marks = getMarks();
+export const getUserProfileTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
+  const user = await ctx.prisma.user.findFirst();
+  if (!user) {
+    return { user: null, marks: [], similarPrograms: [], topSports: [], hasTaste: false };
+  }
 
-  const enrichedMarks = marks.map((m) => {
-    const program = programs.find((p) => p.name === m.programName);
-    return {
-      ...m,
-      programSport: program?.sport ?? '',
-      programLevel: program?.level ?? '',
-      programDuration: program?.duration ?? 0,
-    };
+  const marks = await ctx.prisma.mark.findMany({
+    where: { userId: user.id },
+    include: {
+      program: { select: { name: true, sport: true, level: true, duration: true } },
+    },
+    orderBy: { markedAt: 'desc' },
   });
 
-  const userSports = _.countBy(enrichedMarks.map((m) => m.programSport).filter(Boolean));
-  const topSports = Object.entries(userSports)
+  const enrichedMarks = marks.map((m) => ({
+    programName: m.program.name,
+    mark: m.mark,
+    markedAt: m.markedAt.toISOString(),
+    programSport: m.program.sport,
+    programLevel: m.program.level,
+    programDuration: m.program.duration,
+  }));
+
+  // Считаем топ виды спорта
+  const sportCount: Record<string, number> = {};
+  for (const m of enrichedMarks) {
+    if (m.programSport) sportCount[m.programSport] = (sportCount[m.programSport] ?? 0) + 1;
+  }
+  const topSports = Object.entries(sportCount)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 2)
     .map(([sport]) => sport);
 
-  const levelCounts = _.countBy(enrichedMarks.map((m) => m.programLevel).filter(Boolean));
-  const topLevel = Object.entries(levelCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';
+  const levelCount: Record<string, number> = {};
+  for (const m of enrichedMarks) {
+    if (m.programLevel) levelCount[m.programLevel] = (levelCount[m.programLevel] ?? 0) + 1;
+  }
+  const topLevel = Object.entries(levelCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';
 
-  const markedNames = new Set(marks.map((m) => m.programName));
+  const markedProgramIds = marks.map((m) => m.programId);
   const hasTaste = topSports.length > 0;
 
-  let similar: typeof programs;
+  let similar;
   if (hasTaste) {
-    const strict = programs.filter(
-      (p) => topSports.includes(p.sport) && p.level === topLevel && !markedNames.has(p.name)
-    );
-    const relaxed = programs.filter((p) => topSports.includes(p.sport) && !markedNames.has(p.name));
-    similar = _.sampleSize(strict.length >= 7 ? strict : relaxed, 7);
+    similar = await ctx.prisma.program.findMany({
+      where: {
+        sport: { in: topSports },
+        level: topLevel || undefined,
+        id: { notIn: markedProgramIds },
+      },
+      take: 7,
+      orderBy: { completedCount: 'desc' },
+    });
+
+    if (similar.length < 7) {
+      similar = await ctx.prisma.program.findMany({
+        where: {
+          sport: { in: topSports },
+          id: { notIn: markedProgramIds },
+        },
+        take: 7,
+        orderBy: { completedCount: 'desc' },
+      });
+    }
   } else {
-    similar = programs
-      .filter((p) => !markedNames.has(p.name))
-      .sort((a, b) => b.completedCount - a.completedCount)
-      .slice(0, 7);
+    similar = await ctx.prisma.program.findMany({
+      where: { id: { notIn: markedProgramIds } },
+      orderBy: { completedCount: 'desc' },
+      take: 7,
+    });
   }
 
   const similarPrograms = similar.map((p) => ({
@@ -49,7 +80,7 @@ export const getUserProfileTrpcRoute = trpc.procedure.query(() => {
   }));
 
   return {
-    user: userProfile,
+    user: { name: user.name, email: user.email },
     marks: enrichedMarks,
     similarPrograms,
     topSports,

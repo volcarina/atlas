@@ -25,8 +25,8 @@ model User {
 }
 
 model Program {
-  id             String @id @default(uuid())
-  nick           String @unique
+  id             String  @id @default(uuid())
+  nick           String  @unique
   name           String
   sport          String
   level          String
@@ -34,9 +34,10 @@ model Program {
   calories       Int
   description    String
   text           String
-  rating         Float  @default(0)
-  reviewsCount   Int    @default(0)
-  completedCount Int    @default(0)
+  rating         Float   @default(0)
+  reviewsCount   Int     @default(0)
+  completedCount Int     @default(0)
+  videoId        String?
 
   exercises Exercise[]
   marks     Mark[]
@@ -47,6 +48,9 @@ model Program {
 model Exercise {
   id        Int    @id @default(autoincrement())
   name      String
+  order     Int    @default(0)
+  duration  Int    @default(45)
+  restAfter Int    @default(15)
   programId String
 
   program Program @relation(fields: [programId], references: [id], onDelete: Cascade)

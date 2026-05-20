@@ -23,7 +23,7 @@ $radius-sm: 8px;
 .title {
   font-size: 36px;
   font-weight: 800;
-  color:#36365e;
+  color: #36365e;
   margin: 0 0 8px;
   font-family: 'Georgia', serif;
 }
@@ -34,6 +34,7 @@ $radius-sm: 8px;
   margin: 0;
 }
 
+/* ── Filters ── */
 .filters {
   background: $surface;
   border-radius: $radius;
@@ -58,6 +59,8 @@ $radius-sm: 8px;
   color: $text-muted;
   min-width: 100px;
   font-weight: 600;
+  cursor: help;
+  border-bottom: 1px dashed $border;
 }
 
 .pillGroup {
@@ -95,12 +98,14 @@ $radius-sm: 8px;
   padding-left: 4px;
 }
 
+/* ── Grid ── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
 }
 
+/* ── Card ── */
 .card {
   display: flex;
   flex-direction: column;
@@ -110,12 +115,10 @@ $radius-sm: 8px;
   background: white;
   text-decoration: none;
   color: inherit;
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
 
   &:hover {
-    box-shadow: 0 8px 32px rgba($accent, 0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
     transform: translateY(-3px);
   }
 }
@@ -123,17 +126,19 @@ $radius-sm: 8px;
 .cardThumb {
   position: relative;
   aspect-ratio: 16/10;
+  overflow: hidden;
   background: $surface;
 }
 
 .cardImg {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #ddd 0%, #c8c8d0 50%, #ddd 100%);
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
 
-  &::after {
-    content: '';
-    display: block;
+  .card:hover & {
+    transform: scale(1.06);
   }
 }
 
@@ -178,30 +183,21 @@ $radius-sm: 8px;
 }
 
 .cardTitle {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   margin: 0;
   font-family: 'Georgia', serif;
   color: $accent;
-  line-height: 1.2;
-}
-
-.cardDesc {
-  font-size: 12px;
-  color: $text-muted;
-  margin: 0;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.3;
 }
 
 .cardFooter {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-top: auto;
   padding-top: 10px;
   border-top: 1px solid $border;
+  flex-wrap: wrap;
 }
 
 .cardDuration,

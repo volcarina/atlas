@@ -1,7 +1,6 @@
 @import '../../styles/_vars.scss';
 @import '../../styles/_mixins.scss';
 
-/* ── Hero ── */
 .hero {
   min-height: 88vh;
   display: flex;
@@ -54,9 +53,7 @@
   color: var(--color-primary-text);
   margin-bottom: 20px;
 
-  span {
-    color: var(--color-accent);
-  }
+  span { color: var(--color-accent); }
 }
 
 .heroText {
@@ -147,7 +144,81 @@
   color: var(--color-muted-text);
 }
 
-/* ── Generic section wrapper ── */
+.userDashboard {
+  background: var(--color-card-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 8px;
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.dashboardHello {
+  font-size: 13px;
+  color: var(--color-muted-text);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.dashboardName {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary-text);
+  letter-spacing: -0.02em;
+}
+
+.dashboardStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dashStat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dashStatVal {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-primary-text);
+  line-height: 1;
+}
+
+.dashStatLabel {
+  font-size: 12px;
+  color: var(--color-muted-text);
+  line-height: 1.3;
+}
+
+.dashStatBar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.dashStatBarFill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--color-accent);
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .section {
   padding: 64px 0 48px;
 }
@@ -186,7 +257,6 @@
   margin-bottom: 36px;
 }
 
-/* ── Programs ── */
 .programsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -208,10 +278,21 @@
   }
 }
 
-.programEmoji {
-  font-size: 32px;
+.programIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-accent-tint);
+  border-radius: 12px;
   margin-bottom: 14px;
-  display: block;
+  color: var(--color-accent);
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 .programName {
@@ -227,7 +308,6 @@
   color: var(--color-muted-text);
 }
 
-/* ── Features ── */
 .featuresGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -241,9 +321,7 @@
   padding: 28px 24px;
   transition: background 0.25s, border-color 0.15s;
 
-  &:hover {
-    border-color: var(--color-accent-outline);
-  }
+  &:hover { border-color: var(--color-accent-outline); }
 }
 
 .featureIcon {
@@ -254,8 +332,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
   margin-bottom: 16px;
+  color: var(--color-accent);
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 .featureTitle {
@@ -271,7 +354,6 @@
   line-height: 1.6;
 }
 
-/* ── Service / split sections ── */
 .splitSection {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -304,7 +386,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 72px;
   position: relative;
   overflow: hidden;
 
@@ -316,13 +397,36 @@
   }
 }
 
+.splitVisualInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.splitVisualSvg {
+  width: 120px;
+  height: 100px;
+  color: var(--color-accent);
+  opacity: 0.7;
+}
+
+.splitVisualLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted-text);
+}
+
 .splitDivider {
   border: none;
   border-top: 1px solid var(--color-border);
   margin: 0;
 }
 
-/* ── Trainers ── */
 .trainersGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -352,7 +456,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--color-accent);
   margin: 0 auto 12px;
@@ -391,9 +495,12 @@
 }
 
 .reviewStars {
+  display: flex;
+  gap: 3px;
+}
+
+.reviewStarSvg {
   color: var(--color-warning);
-  font-size: 14px;
-  letter-spacing: 1px;
 }
 
 .reviewText {
@@ -409,7 +516,6 @@
   color: var(--color-primary-text);
 }
 
-/* ── CTA banner ── */
 .ctaBanner {
   background: var(--color-accent);
   border-radius: 20px;

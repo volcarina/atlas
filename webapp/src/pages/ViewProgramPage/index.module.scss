@@ -28,6 +28,7 @@ $radius-sm: 8px;
   color: $text-muted;
 }
 
+/* ── Hero ── */
 .hero {
   display: grid;
   grid-template-columns: 1fr 420px;
@@ -49,109 +50,50 @@ $radius-sm: 8px;
 .mediaPicture {
   border-radius: $radius;
   overflow: hidden;
-  background: $surface;
   aspect-ratio: 16/10;
+  position: relative;
 }
 
-.mediaPlaceholder {
+.mediaImg {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #ddd 0%, #c8c8d0 50%, #ddd 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
 
-  &::after {
-    content: '🏋️';
-    font-size: 64px;
-    opacity: 0.25;
+  .mediaPicture:hover & {
+    transform: scale(1.03);
   }
 }
 
-.exercisesTitle {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
+.mediaOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 50%);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.mediaSportBadge {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 100px;
+  padding: 5px 14px;
   font-family: 'Helvetica', sans-serif;
 }
 
-.exercisesRow {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  overflow-x: auto;
-  padding-bottom: 4px;
-
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $border;
-    border-radius: 4px;
-  }
-}
-
-.exerciseThumb {
-  flex: 0 0 96px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-}
-
-.exerciseImg {
-  width: 96px;
-  height: 72px;
-  border-radius: $radius-sm;
-  background: linear-gradient(135deg, #e0e0e8, #ccc);
-  border: 1px solid $border;
-}
-
-.exerciseName {
-  font-size: 11px;
-  color: $text-muted;
-  text-align: center;
-  font-family: 'Helvetica', sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 96px;
-}
-
-.exercisesMore {
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid $border;
-  background: white;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $accent;
-  transition:
-    background 0.2s,
-    color 0.2s;
-
-  &:hover {
-    background: $accent;
-    color: white;
-  }
-}
-
+/* ── Hero Info ── */
 .heroInfo {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.heroHeader {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .heroSportTag {
@@ -160,7 +102,7 @@ $radius-sm: 8px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: $text-muted;
-  margin-bottom: 6px;
+  margin: 0;
 }
 
 .heroTitle {
@@ -170,34 +112,11 @@ $radius-sm: 8px;
   margin: 0;
 }
 
-.favoriteBtn {
-  border: 1px solid $border;
-  background: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    border-color 0.2s,
-    color 0.2s;
-  color: $text-muted;
-
-  &:hover {
-    border-color: $highlight;
-    color: $highlight;
-  }
-}
-
 .heroDesc {
   font-size: 14px;
   color: $text-muted;
   font-family: 'Helvetica', sans-serif;
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
 }
 
@@ -225,14 +144,8 @@ $radius-sm: 8px;
   gap: 2px;
 }
 
-.starFilled {
-  color: #f5a623;
-  font-size: 18px;
-}
-.starEmpty {
-  color: $border;
-  font-size: 18px;
-}
+.starFilled { color: #f5a623; font-size: 18px; }
+.starEmpty  { color: $border;  font-size: 18px; }
 
 .ratingNum {
   font-size: 13px;
@@ -273,11 +186,17 @@ $radius-sm: 8px;
 }
 
 .pillValue {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
+  font-family: 'Helvetica', sans-serif;
 }
 
+/* ── Start button ── */
 .startBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   width: 100%;
   padding: 16px;
   background: $accent;
@@ -290,18 +209,62 @@ $radius-sm: 8px;
   letter-spacing: 0.08em;
   cursor: pointer;
   font-family: 'Helvetica', sans-serif;
-  transition:
-    background 0.2s,
-    transform 0.1s;
+  transition: background 0.2s, transform 0.1s;
 
-  &:hover {
-    background: $accent2;
-  }
-  &:active {
-    transform: scale(0.99);
+  &:hover { background: $accent2; }
+  &:active { transform: scale(0.99); }
+}
+
+/* ── Mark buttons ── */
+.markButtons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.markBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 12px;
+  flex: 1;
+  min-width: 80px;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-family: 'Helvetica', sans-serif;
+  transition: all 0.18s ease;
+
+  &:hover:not(.markBtnActive) {
+    border-color: $accent;
+    background: $surface;
+    transform: translateY(-1px);
   }
 }
 
+.markBtnActive {
+  color: white !important;
+  .markBtnIcon { color: white; }
+  .markBtnLabel { color: rgba(255,255,255,0.85); }
+}
+
+.markBtnIcon {
+  font-size: 20px;
+  line-height: 1;
+  color: $text-muted;
+}
+
+.markBtnLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+/* ── Trainer ── */
 .trainerSection {
   display: flex;
   flex-direction: column;
@@ -326,49 +289,29 @@ $radius-sm: 8px;
   background: white;
   cursor: pointer;
   position: relative;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 
   &:hover {
     border-color: $accent;
-    box-shadow: 0 4px 16px rgba($accent, 0.1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
 }
 
 .trainerAvatar {
-  width: 44px;
-  height: 44px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   background: $accent;
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
   font-family: 'Helvetica', sans-serif;
   flex-shrink: 0;
 }
 
-.trainerMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.trainerMeta { display: flex; flex-direction: column; gap: 2px; }
+.trainerName { font-size: 15px; font-weight: 600; }
+.trainerSpecialty { font-size: 12px; color: $text-muted; font-family: 'Helvetica', sans-serif; }
 
-.trainerName {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.trainerSpecialty {
-  font-size: 12px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-}
-
-// Hover popup
 .trainerPopup {
   position: absolute;
   bottom: calc(100% + 12px);
@@ -378,7 +321,7 @@ $radius-sm: 8px;
   border: 1px solid $border;
   border-radius: $radius;
   padding: 20px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
   z-index: 100;
   animation: popupIn 0.18s ease;
   max-height: 480px;
@@ -386,71 +329,27 @@ $radius-sm: 8px;
 }
 
 @keyframes popupIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.popupHeader {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.popupHeaderInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.popupHeader { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.popupHeaderInfo { display: flex; flex-direction: column; gap: 2px; }
 
 .popupAvatar {
-  width: 52px;
-  height: 52px;
+  width: 52px; height: 52px;
   border-radius: 50%;
-  background: $accent;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  font-weight: 700;
+  background: $accent; color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 700;
   font-family: 'Helvetica', sans-serif;
   flex-shrink: 0;
 }
 
-.popupName {
-  font-size: 17px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.popupSpecialty {
-  font-size: 12px;
-  color: $highlight;
-  font-family: 'Helvetica', sans-serif;
-  margin: 0;
-  font-weight: 600;
-}
-
-.popupUsername {
-  font-size: 11px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-}
-
-.popupBio {
-  font-size: 12px;
-  color: #555;
-  line-height: 1.55;
-  font-family: 'Helvetica', sans-serif;
-  margin: 0 0 14px;
-}
+.popupName { font-size: 17px; font-weight: 700; margin: 0; }
+.popupSpecialty { font-size: 12px; color: $highlight; font-family: 'Helvetica', sans-serif; margin: 0; font-weight: 600; }
+.popupUsername { font-size: 11px; color: $text-muted; font-family: 'Helvetica', sans-serif; }
+.popupBio { font-size: 12px; color: #555; line-height: 1.55; font-family: 'Helvetica', sans-serif; margin: 0 0 14px; }
 
 .popupStats {
   display: grid;
@@ -462,100 +361,29 @@ $radius-sm: 8px;
 }
 
 .popupStat {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  align-items: center;
-  text-align: center;
+  display: flex; flex-direction: column; gap: 1px;
+  align-items: center; text-align: center;
   padding: 8px 4px;
   background: #f8f8fb;
   border-radius: 8px;
 }
 
-.popupStatValue {
-  font-size: 17px;
-  font-weight: 700;
-}
+.popupStatValue { font-size: 17px; font-weight: 700; }
+.popupStatLabel { font-size: 10px; color: $text-muted; font-family: 'Helvetica', sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
 
-.popupStatLabel {
-  font-size: 10px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.popupDetail {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.popupDetailIcon {
-  font-size: 13px;
-  flex-shrink: 0;
-  line-height: 1.4;
-}
-
-.popupDetailText {
-  font-size: 12px;
-  color: #444;
-  font-family: 'Helvetica', sans-serif;
-  line-height: 1.4;
-}
+.popupDetail { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+.popupDetailIcon { font-size: 13px; flex-shrink: 0; line-height: 1.4; }
+.popupDetailText { font-size: 12px; color: #444; font-family: 'Helvetica', sans-serif; line-height: 1.4; }
 
 .popupAchievements {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 10px;
-  padding-top: 10px;
+  display: flex; flex-direction: column; gap: 4px;
+  margin-top: 10px; padding-top: 10px;
   border-top: 1px solid #f0f0f4;
 }
 
-.popupAchievement {
-  font-size: 11px;
-  color: #444;
-  font-family: 'Helvetica', sans-serif;
-  line-height: 1.4;
-}
+.popupAchievement { font-size: 11px; color: #444; font-family: 'Helvetica', sans-serif; line-height: 1.4; }
 
-.popupPrice {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-  padding: 8px 12px;
-  background: #f0f4ff;
-  border-radius: 8px;
-}
-
-.popupPriceLabel {
-  font-size: 11px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-}
-
-.popupPriceValue {
-  font-size: 15px;
-  font-weight: 700;
-  color: $accent;
-}
-
-.popupSlots {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #444;
-  font-family: 'Helvetica', sans-serif;
-}
-
-.trainerLocation {
-  font-size: 11px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-}
-
+/* ── Desc block ── */
 .descBlock {
   background: $surface;
   border-radius: $radius;
@@ -564,9 +392,7 @@ $radius-sm: 8px;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 640px) { grid-template-columns: 1fr; }
 }
 
 .descText {
@@ -579,11 +405,8 @@ $radius-sm: 8px;
 
 .checkList {
   list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 10px;
 
   li {
     padding-left: 22px;
@@ -602,10 +425,8 @@ $radius-sm: 8px;
   }
 }
 
-// Similar programs section
-.similarSection {
-  margin-top: 56px;
-}
+/* ── Similar Programs ── */
+.similarSection { margin-top: 56px; }
 
 .similarTitle {
   font-size: 22px;
@@ -620,44 +441,58 @@ $radius-sm: 8px;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
 
-  @media (max-width: 1100px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 580px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 580px)  { grid-template-columns: 1fr; }
 }
 
 .similarCard {
   border: 1px solid $border;
   border-radius: $radius;
-  padding: 20px;
+  overflow: hidden;
   background: white;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s,
-    transform 0.15s;
+  transition: box-shadow 0.2s, transform 0.15s;
 
   &:hover {
-    border-color: $accent;
-    box-shadow: 0 6px 24px rgba($accent, 0.1);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
     transform: translateY(-2px);
   }
 }
 
-.similarCardTop {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.similarThumb {
+  position: relative;
+  aspect-ratio: 16/10;
+  overflow: hidden;
 }
 
-.similarEmoji {
-  font-size: 20px;
-  line-height: 1;
+.similarImg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+
+  .similarCard:hover & { transform: scale(1.05); }
+}
+
+.similarLevel {
+  position: absolute;
+  top: 8px; left: 8px;
+  font-size: 10px; font-weight: 700;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 100px;
+  padding: 3px 9px;
+  font-family: 'Helvetica', sans-serif;
+}
+
+.similarBody {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .similarSport {
@@ -669,116 +504,22 @@ $radius-sm: 8px;
   font-weight: 600;
 }
 
-.similarLevel {
-  font-size: 11px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-  margin-left: auto;
-  background: $surface;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
 .similarName {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   margin: 0;
   line-height: 1.3;
   color: $accent;
-}
-
-.similarDesc {
-  font-size: 12px;
-  color: $text-muted;
-  font-family: 'Helvetica', sans-serif;
-  line-height: 1.5;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-family: 'Georgia', serif;
 }
 
 .similarMeta {
   display: flex;
-  gap: 12px;
-  margin-top: auto;
+  gap: 10px;
   padding-top: 8px;
   border-top: 1px solid $border;
 }
 
 .similarDuration,
-.similarRating,
-.similarCalories {
-  font-size: 12px;
-  font-family: 'Helvetica', sans-serif;
-  color: $text-muted;
-}
-
-.similarRating {
-  color: #f5a623;
-  font-weight: 600;
-}
-
-.markButtons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.markBtn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 12px;
-  flex: 1;
-  min-width: 80px;
-  border: 1.5px solid #e2e2e8;
-  border-radius: 8px;
-  background: white;
-  cursor: pointer;
-  font-family: 'Helvetica', sans-serif;
-  transition: all 0.18s ease;
-
-  &:hover:not(.markBtnActive) {
-    border-color: #1a1a2e;
-    background: #f7f7f9;
-    transform: translateY(-1px);
-  }
-}
-
-.markBtnActive {
-  color: white !important;
-
-  .markBtnIcon {
-    color: white;
-  }
-  .markBtnLabel {
-    color: rgba(255, 255, 255, 0.85);
-  }
-}
-
-.markBtnIcon {
-  font-size: 20px;
-  line-height: 1;
-  color: #888;
-  transition: color 0.18s;
-
-  .markBtnActive & {
-    color: white;
-  }
-}
-
-.markBtnLabel {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #888;
-  white-space: nowrap;
-  transition: color 0.18s;
-
-  .markBtnActive & {
-    color: rgba(255, 255, 255, 0.85);
-  }
-}
+.similarCalories { font-size: 11px; color: $text-muted; font-family: 'Helvetica', sans-serif; }
+.similarRating   { font-size: 11px; color: #f5a623; font-weight: 600; font-family: 'Helvetica', sans-serif; }

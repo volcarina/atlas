@@ -4,6 +4,8 @@ import { trpc } from '../../lib/trpc';
 import { getViewProgramRoute } from '../../lib/routes';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { Tooltip } from '../../components/Tooltip';
+import { SPORT_IMAGES } from '../ViewProgramPage';
 import css from './index.module.scss';
 
 type TabType = 'favorite' | 'completed' | 'wantTo';
@@ -12,11 +14,6 @@ const TAB_LABELS: Record<TabType, string> = {
   favorite: 'Избранные',
   completed: 'Пройденные',
   wantTo: 'Хочу пройти',
-};
-
-const SPORT_EMOJI: Record<string, string> = {
-  Йога: '🧘', Кардио: '🏃', Силовые: '🏋️', HIIT: '⚡',
-  Стретчинг: '🤸', Пилатес: '🌀', Функциональный: '💪', Бокс: '🥊',
 };
 
 const AVATAR_COLORS = [
@@ -31,7 +28,6 @@ const COVER_STYLES = [
   { id: 'night',     label: '🌙 Ночь',  gradient: 'linear-gradient(135deg, #0f1117 0%, #1e2340 50%, #2b3272 100%)' },
 ];
 
-// ─── Achievements ─────────────────────────────────────────────────────────────
 
 type AchievementId =
   | 'first_favorite' | 'first_completed' | 'five_completed' | 'ten_completed'
@@ -81,7 +77,6 @@ const TIER_COLORS = {
   gold:   { bg: '#ffd700', glow: 'rgba(255,215,0,0.4)',    label: 'Золото' },
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState<TabType>('favorite');
@@ -162,7 +157,6 @@ export const ProfilePage = () => {
     ? new Date(user.createdAt).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
     : null;
 
-  // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleSave = () => {
     updateProfileMutation.mutate({
@@ -227,7 +221,6 @@ export const ProfilePage = () => {
     });
   };
 
-  // ── Achievements ──────────────────────────────────────────────────────────
 
   const achievements = computeAchievements({
     marks, stats,
@@ -241,7 +234,6 @@ export const ProfilePage = () => {
       <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarPhotoChange} />
       <input ref={coverInputRef}  type="file" accept="image/*" style={{ display: 'none' }} onChange={handleCoverPhotoChange} />
 
-      {/* Cover */}
       <div
         className={css.cover}
         style={coverPhoto
@@ -272,7 +264,6 @@ export const ProfilePage = () => {
         )}
       </div>
 
-      {/* Header row */}
       <div className={css.headerRow}>
         <div className={css.avatarWrap}>
           <div
@@ -335,7 +326,6 @@ export const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Form */}
       <div className={css.formGrid}>
         <div className={css.fieldGroup}>
           <label className={css.fieldLabel}>Адрес электронной почты</label>
@@ -370,7 +360,6 @@ export const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Stats */}
       <section className={css.section}>
         <div className={css.sectionHeader}><h2 className={css.sectionTitle}>Статистика</h2></div>
         <div className={css.statsGrid}>
@@ -383,11 +372,10 @@ export const ProfilePage = () => {
         </div>
       </section>
 
-      {/* Achievements */}
       <section className={css.section}>
         <div className={css.sectionHeader}>
           <h2 className={css.sectionTitle}>Достижения</h2>
-          <span className={css.achievementCounter}>{unlockedCount} / {achievements.length}</span>
+          <Tooltip content="Достижения разблокируются автоматически по мере активности. Наводите на карточку чтобы увидеть прогресс." position="bottom"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" width="14" height="14" style={{marginRight:4,verticalAlign:"middle",opacity:0.5}}><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5.5v.5"/></svg></Tooltip><span className={css.achievementCounter}>{unlockedCount} / {achievements.length}</span>
         </div>
         <div className={css.achProgressBar}>
           <div className={css.achProgressFill} style={{ width: `${(unlockedCount / achievements.length) * 100}%` }} />
@@ -434,7 +422,6 @@ export const ProfilePage = () => {
         </div>
       </section>
 
-      {/* My workouts */}
       <section className={css.section}>
         <h2 className={css.sectionTitle}>Мои тренировки</h2>
         <div className={css.tabs}>
@@ -459,7 +446,7 @@ export const ProfilePage = () => {
             {tabMarks.map((m: any) => (
               <div key={m.programName} className={css.programCard}>
                 <Link to={getViewProgramRoute({ programTitle: m.programNick ?? m.programName })} className={css.cardThumb}>
-                  <div className={css.cardImg}><span className={css.cardEmoji}>{SPORT_EMOJI[m.programSport] ?? '🏅'}</span></div>
+                  <div className={css.cardImg}><img src={SPORT_IMAGES[m.programSport] ?? SPORT_IMAGES['Кардио']} alt={m.programSport} className={css.cardImgTag} /></div>
                   {activeTab === 'completed' && <span className={css.doneBadge}>✓</span>}
                   {activeTab === 'favorite'  && <span className={css.favBadge}>♥</span>}
                   {activeTab === 'wantTo'    && <span className={css.wantBadge}>+</span>}
@@ -476,7 +463,6 @@ export const ProfilePage = () => {
         )}
       </section>
 
-      {/* Similar programs */}
       <section className={css.section}>
         <div className={css.sectionHeader}>
           <h2 className={css.sectionTitle}>Похожие тренировки</h2>
@@ -490,7 +476,7 @@ export const ProfilePage = () => {
           <div className={css.similarRow}>
             {data.similarPrograms.map((p: any) => (
               <Link key={p.name} to={getViewProgramRoute({ programTitle: p.nick ?? p.name })} className={css.similarCard}>
-                <div className={css.similarThumb}><span className={css.similarEmoji}>{SPORT_EMOJI[p.sport] ?? '🏅'}</span></div>
+                <div className={css.similarThumb}><img src={SPORT_IMAGES[p.sport] ?? SPORT_IMAGES['Кардио']} alt={p.sport} className={css.similarImg} /></div>
                 <div className={css.similarBody}>
                   <p className={css.similarName}>{p.name}</p>
                   <p className={css.similarMeta}>{p.sport} · {p.level}</p>

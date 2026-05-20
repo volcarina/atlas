@@ -2,6 +2,8 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { getAllProgramsRoute, getProfileRoute, getHomeRoute, getHistoryRoute } from '../../lib/routes';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { PageTransition } from '../PageTransition';
+import { NetworkStatus } from '../NetworkStatus';
 import css from './index.module.scss';
 
 export const Layout = () => {
@@ -122,8 +124,12 @@ export const Layout = () => {
       </nav>
 
       <div className={css.content}>
-        <Outlet />
+        <PageTransition>
+          <Outlet />
+        </PageTransition>
       </div>
+
+      <NetworkStatus />
     </div>
   );
 };

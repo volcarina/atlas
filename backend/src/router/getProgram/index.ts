@@ -7,21 +7,21 @@ export const getProgramTrpcRoute = trpc.procedure
     const program = await ctx.prisma.program.findFirst({
       where: { name: input.programTitle },
       include: {
-        exercises: { select: { id: true, name: true } },
+        exercises: {
+          select: { id: true, name: true, order: true, duration: true, restAfter: true },
+          orderBy: { order: 'asc' },
+        },
       },
     });
 
     if (!program) return { program: null, trainer: null };
 
-    // Находим всех тренеров по виду спорта программы
     const matchingTrainers = await ctx.prisma.trainer.findMany({
       where: { sports: { has: program.sport } },
     });
 
-    // eslint-disable-next-line no-useless-assignment
     let trainer = null;
     if (matchingTrainers.length > 0) {
-      // Детерминированно выбираем тренера на основе длины имени программы
       const idx = program.name.length % matchingTrainers.length;
       trainer = matchingTrainers[idx];
     } else {

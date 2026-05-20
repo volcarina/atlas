@@ -5,7 +5,6 @@ import { trpc } from '../../lib/trpc';
 export const getSimilarProgramsTrpcRoute = trpc.procedure
   .input(z.object({ programName: z.string(), sport: z.string(), level: z.string() }))
   .query(async ({ input, ctx }) => {
-    // Похожие: сначала тот же спорт, исключаем текущую
     const sameSportPrograms = await ctx.prisma.program.findMany({
       where: {
         sport: input.sport,
@@ -26,7 +25,6 @@ export const getSimilarProgramsTrpcRoute = trpc.procedure
       take: 6,
     });
 
-    // Если не набрали 4 — добираем из других спортов того же уровня
     let similar = sameSportPrograms;
     if (similar.length < 4) {
       const otherSportPrograms = await ctx.prisma.program.findMany({
